@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cosmic Mood</title>
+  <style>
+    :root {
+      --night: #090b22;
+      --deep-blue: #111948;
+      --violet: #7c4dff;
+      --pink: #ff70b7;
+      --ice: #e8f7ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: var(--ice);
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(124, 77, 255, 0.28), transparent 28%),
+        radial-gradient(circle at 80% 80%, rgba(255, 112, 183, 0.2), transparent 25%),
+        linear-gradient(135deg, var(--night), var(--deep-blue));
+    }
+
+    .stars,
+    .stars::before,
+    .stars::after {
+      position: fixed;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.9) 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(255,255,255,.55) 1px, transparent 1.5px);
+      background-size: 97px 113px, 157px 139px;
+      background-position: 12px 18px, 80px 42px;
+      animation: drift 24s linear infinite;
+      opacity: .7;
+    }
+
+    .stars::before {
+      transform: scale(1.3);
+      animation-duration: 37s;
+      opacity: .35;
+    }
+
+    .stars::after {
+      transform: scale(1.7);
+      animation-duration: 52s;
+      opacity: .2;
+    }
+
+    .card {
+      position: relative;
+      width: min(90vw, 470px);
+      padding: 3rem 2.5rem 2.5rem;
+      text-align: center;
+      border: 1px solid rgba(232, 247, 255, .2);
+      border-radius: 24px;
+      background: rgba(10, 13, 43, .68);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .38), inset 0 1px rgba(255,255,255,.14);
+      backdrop-filter: blur(14px);
+      animation: appear .9s ease-out both;
+    }
+
+    .orb {
+      width: 112px;
+      height: 112px;
+      margin: 0 auto 1.7rem;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #fff 0 5%, #b7ecff 7%, #8d6bff 38%, #fb69b6 72%, transparent 73%);
+      box-shadow: 0 0 22px #b378ff, 0 0 65px rgba(255, 112, 183, .65);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .eyebrow {
+      margin: 0 0 .65rem;
+      color: #b9c4ff;
+      font: 700 .72rem/1.2 Arial, sans-serif;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 10vw, 4.5rem);
+      line-height: .95;
+      font-weight: 400;
+      letter-spacing: .02em;
+      text-shadow: 0 0 24px rgba(255, 255, 255, .16);
+    }
+
+    .message {
+      min-height: 3.2em;
+      margin: 1.4rem auto 2rem;
+      color: #ccd8ef;
+      font: 1rem/1.6 Arial, sans-serif;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 999px;
+      padding: .9rem 1.35rem;
+      color: #140c2b;
+      font: 700 .9rem Arial, sans-serif;
+      background: linear-gradient(100deg, #b9f3ff, #ff9dcc);
+      box-shadow: 0 8px 24px rgba(255, 112, 183, .25);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-3px) rotate(-1deg);
+      box-shadow: 0 12px 30px rgba(185, 243, 255, .3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    @keyframes drift {
+      to { background-position: 110px 130px, 10px 170px; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      50% { transform: translateY(-12px) rotate(8deg); }
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(20px) scale(.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+
+  <main class="card">
+    <div class="orb" aria-hidden="true"></div>
+    <p class="eyebrow">A tiny message from space</p>
+    <h1 id="title">Cosmic Mood</h1>
+    <p class="message" id="message">Your next bright idea is already somewhere in orbit.</p>
+    <button id="moodButton" type="button">Change the universe</button>
+  </main>
+
+  <script>
+    const moods = [
+      ["Cosmic Mood", "Your next bright idea is already somewhere in orbit."],
+      ["Stellar Energy", "Today feels like a launch day. Count down and begin."],
+      ["Moonlit Calm", "Slow is still moving. Let the quiet do some work."],
+      ["Wild Comet", "Take the surprising route. It may be the memorable one."]
+    ];
+
+    const title = document.querySelector("#title");
+    const message = document.querySelector("#message");
+    const button = document.querySelector("#moodButton");
+
+    button.addEventListener("click", () => {
+      const nextMood = moods[Math.floor(Math.random() * moods.length)];
+      title.textContent = nextMood[0];
+      message.textContent = nextMood[1];
+    });
+  </script>
+</body>
+</html>
