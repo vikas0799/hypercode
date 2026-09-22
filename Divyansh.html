@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Touch Glow</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      touch-action: none;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #02030a;
+    }
+
+    body {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .background {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0, 140, 255, 0.15), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.15), transparent 30%),
+        linear-gradient(135deg, #02030a, #050816 45%, #02030a);
+      animation: bgMove 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgMove {
+      0% {
+        filter: hue-rotate(0deg);
+        transform: scale(1);
+      }
+      100% {
+        filter: hue-rotate(35deg);
+        transform: scale(1.08);
+      }
+    }
+
+    .grid {
+      position: absolute;
+      inset: 0;
+      opacity: 0.18;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(circle at center, black, transparent 85%);
+    }
+
+    .content {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      pointer-events: none;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 7vw, 6rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #ffffff, #7dd3fc, #c084fc, #ffffff);
+      background-size: 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: textGlow 4s linear infinite;
+      text-shadow: 0 0 30px rgba(125, 211, 252, 0.15);
+    }
+
+    p {
+      margin-top: 14px;
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    @keyframes textGlow {
+      from { background-position: 0%; }
+      to { background-position: 300%; }
+    }
+
+    .glow {
+      position: fixed;
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(0.2);
+      background: radial-gradient(
+        circle,
+        rgba(255,255,255,0.95) 0%,
+        rgba(0,220,255,0.75) 12%,
+        rgba(128,0,255,0.45) 36%,
+        rgba(0,120,255,0.18) 58%,
+        transparent 72%
+      );
+      filter: blur(5px);
+      mix-blend-mode: screen;
+      z-index: 5;
+      animation: burst 900ms ease-out forwards;
+    }
+
+    @keyframes burst {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.15);
+      }
+      45% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(2.2);
+      }
+    }
+
+    .ring {
+      position: fixed;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      border: 2px solid rgba(120, 220, 255, 0.95);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 6;
+      box-shadow:
+        0 0 10px #00e5ff,
+        0 0 25px #8b5cf6,
+        inset 0 0 12px #00e5ff;
+      animation: ringExpand 800ms ease-out forwards;
+    }
+
+    @keyframes ringExpand {
+      from {
+        opacity: 1;
+        width: 20px;
+        height: 20px;
+      }
+      to {
+        opacity: 0;
+        width: 220px;
+        height: 220px;
+      }
+    }
+
+    .spark {
+      position: fixed;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 7;
+      background: white;
+      box-shadow: 0 0 12px cyan, 0 0 24px #8b5cf6;
+      animation: sparkMove 650ms ease-out forwards;
+    }
+
+    @keyframes sparkMove {
+      from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      to {
+        opacity: 0;
+        transform:
+          translate(
+            calc(-50% + var(--x)),
+            calc(-50% + var(--y))
+          )
+          scale(0);
+      }
+    }
+
+    .trail {
+      position: fixed;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 4;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, #ffffff 0%, #22d3ee 20%, #8b5cf6 55%, transparent 72%);
+      filter: blur(1px);
+      mix-blend-mode: screen;
+      animation: trailFade 550ms ease-out forwards;
+    }
+
+    @keyframes trailFade {
+      from {
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(3);
+      }
+    }
+
+    .flash {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background:
+        radial-gradient(
+          circle at var(--mx) var(--my),
+          rgba(80, 220, 255, 0.22),
+          rgba(126, 34, 206, 0.10) 20%,
+          transparent 50%
+        );
+      animation: screenFlash 550ms ease-out forwards;
+    }
+
+    @keyframes screenFlash {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    .corner {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      opacity: 0.35;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .tl {
+      top: 20px;
+      left: 20px;
+      border-top: 1px solid #67e8f9;
+      border-left: 1px solid #67e8f9;
+    }
+
+    .br {
+      right: 20px;
+      bottom: 20px;
+      border-right: 1px solid #c084fc;
+      border-bottom: 1px solid #c084fc;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background"></div>
+  <div class="grid"></div>
+  <div class="corner tl"></div>
+  <div class="corner br"></div>
+
+  <div class="content">
+    <h1>Touch The Light</h1>
+    <p>Tap • Click • Drag</p>
+  </div>
+
+  <script>
+    const body = document.body;
+    let lastTrail = 0;
+
+    function createBurst(x, y) {
+      const glow = document.createElement("div");
+      glow.className = "glow";
+      glow.style.left = x + "px";
+      glow.style.top = y + "px";
+      body.appendChild(glow);
+
+      const ring = document.createElement("div");
+      ring.className = "ring";
+      ring.style.left = x + "px";
+      ring.style.top = y + "px";
+      body.appendChild(ring);
+
+      const flash = document.createElement("div");
+      flash.className = "flash";
+      flash.style.setProperty("--mx", x + "px");
+      flash.style.setProperty("--my", y + "px");
+      body.appendChild(flash);
+
+      for (let i = 0; i < 14; i++) {
+        const spark = document.createElement("div");
+        spark.className = "spark";
+        spark.style.left = x + "px";
+        spark.style.top = y + "px";
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 50 + Math.random() * 120;
+
+        spark.style.setProperty("--x", Math.cos(angle) * distance + "px");
+        spark.style.setProperty("--y", Math.sin(angle) * distance + "px");
+
+        body.appendChild(spark);
+
+        setTimeout(() => spark.remove(), 700);
+      }
+
+      setTimeout(() => glow.remove(), 950);
+      setTimeout(() => ring.remove(), 850);
+      setTimeout(() => flash.remove(), 600);
+    }
+
+    function createTrail(x, y) {
+      const now = Date.now();
+
+      if (now - lastTrail < 25) return;
+      lastTrail = now;
+
+      const trail = document.createElement("div");
+      trail.className = "trail";
+      trail.style.left = x + "px";
+      trail.style.top = y + "px";
+      body.appendChild(trail);
+
+      setTimeout(() => trail.remove(), 600);
+    }
+
+    document.addEventListener("pointerdown", (e) => {
+      createBurst(e.clientX, e.clientY);
+    });
+
+    document.addEventListener("pointermove", (e) => {
+      if (e.pointerType === "mouse" && e.buttons === 0) {
+        createTrail(e.clientX, e.clientY);
+        return;
+      }
+
+      createTrail(e.clientX, e.clientY);
+    });
+  </script>
+</body>
+</html>
